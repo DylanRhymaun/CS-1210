@@ -2,7 +2,7 @@
 'Stats'
 Dylan Rhymaun
 A program to help calculate both the mean
-and standard deviation of a list jof numbers
+and standard deviation of a list of numbers
 """
 import math
 
@@ -13,7 +13,7 @@ def calc_mean(lst):
 
 def std_dev(lst):
     mean = calc_mean(lst)
-    sqrt(((number - calc_mean(lst)) ** 2 ) / len(lst))
+    math.sqrt(((number - calc_mean(lst)) ** 2 ) / len(lst))
 
 
 if __name__ == '__main__':

@@ -20,7 +20,12 @@ def calc_remainder(r, s):
 if __name__ == '__main__':
     
     r = int(input("Enter the dividend (a positive integer): "))
+    while r < 0:
+        r = int(input("Enter the dividend (a positive integer): "))
+    
     s = int(input("Enter the divisor (a positive integer): "))
+    while s < 0:
+        s = int(input("Enter the divisor (a positive integer): "))
     
     quotient = calc_quotient(r, s)
     remainder = calc_remainder(r, s)
