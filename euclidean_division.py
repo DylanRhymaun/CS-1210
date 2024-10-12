@@ -5,14 +5,14 @@ A program that calculates a quotient
 and remainder using euclidean division
 """
 
-def calc_quotient(r, s):
-    quotient = 0
+def quotient(r, s):
+    q = 0
     while r >= s:
         r -= s
-        quotient += 1
-    return quotient
+        q += 1
+    return q
 
-def calc_remainder(r, s):
+def remainder(r, s):
     while r >= s:
         r -= s
     return r
@@ -27,8 +27,8 @@ if __name__ == '__main__':
     while s < 0:
         s = int(input("Enter the divisor (a positive integer): "))
     
-    quotient = calc_quotient(r, s)
-    remainder = calc_remainder(r, s)
+    q = quotient(r, s)
+    rem = remainder(r, s)
     
-    print(f"{r} // {s} = {quotient}")
-    print(f"{r} % {s} = {remainder}")
+    print(f"{r} // {s} = {q}")
+    print(f"{r} % {s} = {rem}")
