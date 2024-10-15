@@ -33,7 +33,7 @@ def play(target):
             win = True
             break
         else:
-            if guesses[-1] < target:
+            if guesses[-1] > target:
                 print("HIGH!")
             else:
                 print("LOW!")
