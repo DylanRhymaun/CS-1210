@@ -11,31 +11,29 @@ import math
 
 lst = []
 
-def calc_mean(lst):
+def mean(lst):  
     return sum(lst) / len(lst)
 
 def std_dev(lst):
-    mean = calc_mean(lst)
-    variance = sum((x - mean) ** 2 for x in lst) / len(lst)  
+    mean_value = mean(lst)
+    variance = sum((x - mean_value) ** 2 for x in lst) / len(lst)  
     return math.sqrt(variance)
    
 
 if __name__ == '__main__':
-    # Read data from file into a lst of floats
+    # Read data from file into a list of floats
     with open('co2_ppm.csv') as csvfile:
         reader = csv.reader(csvfile)
         for row in reader:
             lst.append(float(row[1]))
             
-    # Function call(s) to `mean()` and `std_dev()` as needed.
-    mean_value = calc_mean(lst)  
+    # Function calls for mean and standard deviation
+    mean_value = mean(lst)  
     standard_deviation = std_dev(lst)
     most_recent = lst[-1]
     
-    # Write results to file.
+    # Write results to file
     with open('results.txt', 'w') as results:
-        writer = csv.writer(csvfile)
         results.write(f"Mean: {mean_value:.2f}\n")
         results.write(f"Standard Deviation: {standard_deviation:.2f}\n")
-        results.write(f"Most recent observation: {most_recent}\n")
-
+        results.write(f"Most recent observation: {most_recent:.2f}\n")
