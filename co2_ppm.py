@@ -1,7 +1,9 @@
 """
 co2_ppm
 Dylan Rhymaun
-DESC
+Print the standard deviation, mean, and
+most recent recording of a list of
+atmospheric pressures over time. 
 """
 
 import csv
