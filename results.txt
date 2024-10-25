@@ -1,0 +1,3 @@
+Mean: 312.89
+Standard Deviation: 36.97
+Most recent observation: 414.1
