@@ -1,14 +1,25 @@
 """
-
+readfile
 Dylan Rhymaun
-
+Takes a file name and prints contents
+if file is found.
 """
 import os
 
 if __name__ == '__main__':
     
-    with open('winter.txt', 'r') as fh:
-        for line in fh:
-            print(line, end='')  
+    def read_file():
+        while True:
+            filename = input("Enter a filename (or 'q' to quit): ")
+            if filename.lower() == 'q':
+                print("Program terminated")
+                break
+            try:
+                with open(filename, 'r') as file:
+                    content = file.read()
+                    print(content)
+                    break
+            except FileNotFoundError:
+                print(f"The file '{filename}' was not found.")
 
-print("Current Working Directory:", os.getcwd())
+read_file()
