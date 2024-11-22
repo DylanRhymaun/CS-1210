@@ -18,14 +18,25 @@ ROUTES = {
         'Bennington': ['Rutland']
 }
 
-queue = []
-
-bfs(adjency_list, key):
-    while adjency_list:
-        for x in adjency_list.values(key):
-            queue.append(x)
+def bfs(adj_list, start):
+    visited = []
+    queue = [start]
+    
+    while queue:
+        current = queue.pop(0)
         
+        if current not in visited:
+            visited.append(current)
+            neighbors = adj_list.get(current)
+            if neighbors is None:
+                neighbors = []
+            for neighbor in neighbors:
+                if neighbor not in visited and neighbor not in queue:
+                    queue.append(neighbor)
+    
+    return visited
+
 
 if __name__ == '__main__':
-    key = input('Where would you like to start?')
-    
+    visited_locations = bfs(ROUTES, 'Rutland')
+    print("Visited Locations:", visited_locations)    
