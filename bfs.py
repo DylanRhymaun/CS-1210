@@ -19,6 +19,12 @@ ROUTES = {
 }
 
 def bfs(adj_list, start):
+    try:
+        neighbors = adj_list[start]
+    except KeyError:
+        print(f"Error: Starting location not found in the adjacency list.")
+        return[]
+    
     visited = []
     queue = [start]
     
