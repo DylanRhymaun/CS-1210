@@ -15,6 +15,9 @@ move2 = ""
 move3 = ""
 player_hp = 30
 goblin_hp = 50
+goblin_max_hp = goblin_hp  
+goblin_skips_turn = False  
+goblin_accuracy = 1.0  
 
 def whirlwind():
     """Barbarian's basic attack that deals 1d8 physical damage."""
@@ -28,22 +31,21 @@ def fight():
     """Barbarian's ability to heal 1d8 health."""
     return random.randint(1, 8)
 
-def mortal(enemy_hp):
+def mortal(current_goblin_hp):
     """Rogue's ability to kill an enemy below 20% HP."""
-    if enemy_hp < 0.2 * enemy_hp:  
+    if current_goblin_hp < 0.2 * goblin_max_hp:  #Check against maximum HP
         return "Instant Kill"
-    return 0  # No damage if not below threshold
+    return 0  #No damage if not below the threshold
 
 def sawtooth():
-    """Rogue's attack that deals 1d4 physical and 1d4 bleed damage for 2 turns."""
+    """Rogue's attack that deals 1d4 physical and 1d4 bleed damage."""
     physical = random.randint(1, 4)
     bleed = random.randint(1, 4)
     return physical, bleed
 
 def chloroform():
     """Rogue's ability to cause the enemy to lose a turn."""
-    success = random.choice([True, False])  # 50% chance of success
-    return success
+    return random.choice([True, False])  #50%
 
 def shocking():
     """Wizard's basic attack that deals 1d8 lightning damage."""
@@ -51,11 +53,10 @@ def shocking():
 
 def fear():
     """Wizard's ability to make the enemy lose a turn."""
-    success = random.choice([True, False])  # 50% chance of success
-    return success
+    return random.choice([True, False])  #50%
 
 def fog():
-    """Wizard's spell to reduce enemy accuracy for 2 turns."""
+    """Wizard's spell to reduce enemy accuracy."""
     return "Enemy accuracy reduced for 2 turns"
 
 ############################################## Choosing a class ############################################################
@@ -71,21 +72,21 @@ if __name__ == '__main__':
     
     if chosen_class == "barbarian":
         print("You have access to (1) Whirlwind, (2) Phoenix Dive, and (3) Thick of the Fight")
-        move1 = whirlwind #basic attack that does 1d8 physical dmg
-        move2 = phoenix #basic attack that does 1d8 fire dmg
-        move3 = fight #heals self 1d8
+        move1 = whirlwind
+        move2 = phoenix
+        move3 = fight
         
-    if chosen_class == "rogue":
+    elif chosen_class == "rogue":
         print("You have access to (1) Mortal Blow, (2) Sawtooth Knife, and (3) Chloroform")
-        move1 = mortal #kills enemies below 20% HP
-        move2 = sawtooth #basic attack that does 1d4 physical and 1d4 bleed for 2 turns
-        move3 = chloroform #if successful, enemy loses a turn
+        move1 = mortal
+        move2 = sawtooth
+        move3 = chloroform
         
-    if chosen_class == "wizard":
+    elif chosen_class == "wizard":
         print("You have access to (1) Shocking Grasp, (2) Cause Fear, and (3) Fog Cloud")
-        move1 = shocking #basic attack that does 1d8 lightning dmg
-        move2 = fear #if successfulm causes enemy to lose a turn
-        move3 = fog #reduces enemy accuracy for 2 turns
+        move1 = shocking
+        move2 = fear
+        move3 = fog
         
 ############################################## Flavor/setup ############################################################
     print("You, a wayward adventurer come upon greenbog cave - fabled by townsfolk in the local "
@@ -110,47 +111,90 @@ if __name__ == '__main__':
       
 ############################################### Battle Loop ###########################################################    
     while goblin_hp > 0 and player_hp > 0:
-        # Player's turn
-        print("\nIt's your turn!")
+        print("\n")
         print("Choose your move:")
-        print(f"(1) {move1.__name__.replace('_', ' ').capitalize()}")
-        print(f"(2) {move2.__name__.replace('_', ' ').capitalize()}")
-        print(f"(3) {move3.__name__.replace('_', ' ').capitalize()}")
-            
+        if chosen_class == "barbarian":
+            print("(1) Whirlwind")
+            print("(2) Pheonix Dive")
+            print("(3) Thick of the Fight")
+        if chosen_class == "rogue":
+            print("(1) Mortal Blade")
+            print("(2) Sawtooth Knife")
+            print("(3) Chloroform")
+        if chosen_class == "wizard":
+            print("(1) Shocking Grasp")
+            print("(2) Cause Fear")
+            print("(3) Fog Cloud")
         choice = input("Enter the number of your move: ")
-        
+       
         if choice == "1":
-            damage = move1()
-            if isinstance(damage, tuple):  # Handle multi-effect moves (e.g., sawtooth knife)
-                print(f"You dealt {damage[0]} physical damage and {damage[1]} bleed damage!")
-                goblin_hp -= (damage[0] + damage[1])
+            if chosen_class == "rogue":  #Mortal Blow
+                result = mortal(goblin_hp)
+                if result == "Instant Kill":
+                    goblin_hp = 0
+                    print("You instantly killed the goblin!")
+                else:
+                    print("Mortal Blow failed. The goblin isn't weak enough!")
             else:
+                damage = move1()
                 print(f"You dealt {damage} damage!")
                 goblin_hp -= damage
         
         elif choice == "2":
-            damage_or_effect = move2(goblin_hp) if chosen_class == "rogue" else move2()
-            if damage_or_effect == "Instant Kill":
-                print("You executed a mortal blow! The goblin is defeated!")
-                goblin_hp = 0
-            elif isinstance(damage_or_effect, int):
-                print(f"You dealt {damage_or_effect} damage!")
-                goblin_hp -= damage_or_effect
-            else:
-                print("Your move caused an effect on the goblin!")
+            if chosen_class == "rogue":  #Sawtooth Knife
+                physical, bleed = sawtooth()
+                print(f"You dealt {physical} physical damage and {bleed} bleed damage!")
+                goblin_hp -= (physical + bleed)
+            elif chosen_class == "wizard":  #Cause Fear
+                if fear():
+                    print("The goblin is terrified and loses its next turn!")
+                    goblin_skips_turn = True
+                else:
+                    print("Your spell failed to cause fear.")
+            else:  #Phoenix Dive
+                damage = phoenix()
+                print(f"You dealt {damage} fire damage!")
+                goblin_hp -= damage
         
         elif choice == "3":
-            if chosen_class == "barbarian":
-                healing = move3()
+            if chosen_class == "barbarian":  #Thick of the Fight
+                healing = fight()
                 player_hp += healing
                 print(f"You healed for {healing} HP! Your current HP is {player_hp}.")
-            else:
-                print("Your move caused an effect on the goblin!")
+            elif chosen_class == "wizard":  #Fog Cloud
+                print("A thick fog surrounds the goblin, reducing its accuracy!")
+                goblin_accuracy = 0.5
+            elif chosen_class == "rogue":  #Chloroform
+                if chloroform():
+                    print("The goblin is knocked out and loses its next turn!")
+                    goblin_skips_turn = True
+                else:
+                    print("Your attack failed to knock out the goblin.")
         
         else:
             print("Invalid choice. You lose your turn.")
         
-        # Check if goblin is defeated
+        #Goblin's Turn
         if goblin_hp <= 0:
             print("The goblin has been defeated! You win!")
             break
+
+        if goblin_skips_turn:
+            print("The goblin is stunned and skips its turn!")
+            goblin_skips_turn = False  # Reset
+        else:  #Only execute the goblin's attack if it's not stunned
+            print("\nThe goblin attacks!")
+            if random.random() < goblin_accuracy:
+                goblin_damage = random.randint(1, 6)
+                player_hp -= goblin_damage
+                print(f"The goblin dealt {goblin_damage} damage! \nYour HP: {player_hp}")
+            else:
+                print(f"The goblin misses! \nYour HP: {player_hp}")
+
+        #Check player HP status
+        if player_hp <= 0:
+            print("You were defeated by the goblin! Too bad!")
+            break
+
+        #Display goblin's HP at the end of their turn
+        print(f"Goblin's HP: {goblin_hp}")
